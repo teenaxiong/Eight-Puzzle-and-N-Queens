@@ -3,8 +3,8 @@ public class Node {
 	
 	private Node parentNode;
 	private State currState;
-	private int costSoFar;
-	private int totalCost;
+	private int costSoFar = 0;
+	private int totalCost = 0;
 	
 	public Node(State state, Node parent, int costSoFar, int totalCost) {
 		this.setCurrState(state);

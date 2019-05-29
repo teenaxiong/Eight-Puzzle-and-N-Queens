@@ -1,9 +1,11 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class State {
 
-	private final static int PUZZLE_SIZE = 9;
-	private final static int STEP_COST = 1;
+	private final static int TOTAL_CELLS = 9;
+	private final static int PUZZLE_SIDE = 3;
+	private final static int HOLE = 0;
 	
 	private int[] currBoard;
 	
@@ -16,7 +18,11 @@ public class State {
 	}
 	
 	public void printCurrBoard() {
-		
+		for (int i = 0; i < PUZZLE_SIDE; i++) {
+			for (int j = 0; j < PUZZLE_SIDE; j++) {
+				System.out.print(this.currBoard[j * PUZZLE_SIDE] + i);
+			}
+		}
 	}
 	
 	/**
@@ -43,13 +49,13 @@ public class State {
 	
 
 	private int[] copyState(int[] state) {
-		int[] ret = new int[PUZZLE_SIZE];
-		System.arraycopy(state, 0, ret, 0, PUZZLE_SIZE);
+		int[] ret = new int[TOTAL_CELLS];
+		System.arraycopy(state, 0, ret, 0, TOTAL_CELLS);
 		return ret;
 	}
 	
 	
 	private int findHole() {
-		return -1;
+		return Arrays.asList(currBoard).indexOf(HOLE);
 	}
 }
