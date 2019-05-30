@@ -14,7 +14,32 @@ public class State {
 	}
 	
 	public ArrayList<State> genSuccessors() {
-		return null;
+		
+		int holeIdx = findHole();
+		
+		ArrayList<State> successors = new ArrayList<State>();
+		
+		// leftwise
+		if (holeIdx % PUZZLE_SIDE != 0) {
+			successors.add(this.swap(holeIdx, holeIdx - 1));
+		}
+		
+		// rightwise
+		if (holeIdx % PUZZLE_SIDE != PUZZLE_SIDE - 1) {
+			successors.add(this.swap(holeIdx, holeIdx + 1));
+		}
+		
+		// topwise
+		if (holeIdx >= PUZZLE_SIDE) {
+			successors.add(this.swap(holeIdx, holeIdx - PUZZLE_SIDE));
+		}
+		
+		// bottomwise
+		if (holeIdx <  PUZZLE_SIDE * (PUZZLE_SIDE - 1)) {
+			successors.add(this.swap(holeIdx, holeIdx + PUZZLE_SIDE));
+		}
+		
+		return successors;
 	}
 	
 	public void printCurrBoard() {
