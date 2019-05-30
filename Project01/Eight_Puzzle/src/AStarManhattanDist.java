@@ -32,10 +32,13 @@ public class AStarManhattanDist extends AStar {
 		}
 
 		// comparing and calculating heuristic value
+		//
+	
 		for (int x = 0; x < rows; x++) {
-			for (int y = 0; y < columns; y++) {
+			for (int y = 0; y < columns; y++) 
+			{
 				for (int z = 0; z < rows; z++) {
-					for (int j = 0; z < columns; j++) {
+					for (int j = 0; j < columns; j++) {
 						if (currentArray2d[x][y] == goalArray2d[z][j]) {
 							manhattanValue = manhattanValue + (Math.abs(x - z) + Math.abs(y - j));
 						}
