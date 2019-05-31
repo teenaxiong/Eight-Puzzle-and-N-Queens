@@ -3,14 +3,16 @@ import java.util.Arrays;
 
 public class State {
 
-	private final static int TOTAL_CELLS = 9;
-	private final static int PUZZLE_SIDE = 3;
 	private final static int HOLE = 0;
 	
 	private int[] currBoard;
+	private int size;
+	private int side;
 	
-	public State(int[] board) {
+	public State(int[] board, int size, int side) {
 		this.currBoard = board;
+		this.size = size;
+		this.side = side;
 	}
 	
 	public ArrayList<State> genSuccessors() {
@@ -20,34 +22,36 @@ public class State {
 		ArrayList<State> successors = new ArrayList<State>();
 		
 		// leftwise
-		if (holeIdx % PUZZLE_SIDE != 0) {
+		if (holeIdx % side != 0) {
 			successors.add(this.swap(holeIdx, holeIdx - 1));
 		}
 		
 		// rightwise
-		if (holeIdx % PUZZLE_SIDE != PUZZLE_SIDE - 1) {
+		if (holeIdx % side != side - 1) {
 			successors.add(this.swap(holeIdx, holeIdx + 1));
 		}
 		
 		// topwise
-		if (holeIdx >= PUZZLE_SIDE) {
-			successors.add(this.swap(holeIdx, holeIdx - PUZZLE_SIDE));
+		if (holeIdx >= side) {
+			successors.add(this.swap(holeIdx, holeIdx - side));
 		}
 		
 		// bottomwise
-		if (holeIdx <  PUZZLE_SIDE * (PUZZLE_SIDE - 1)) {
-			successors.add(this.swap(holeIdx, holeIdx + PUZZLE_SIDE));
+		if (holeIdx <  side * (side - 1)) {
+			successors.add(this.swap(holeIdx, holeIdx + side));
 		}
 		
 		return successors;
 	}
 	
 	public void printCurrBoard() {
-		for (int i = 0; i < PUZZLE_SIDE; i++) {
-			for (int j = 0; j < PUZZLE_SIDE; j++) {
-				System.out.print(this.currBoard[j * PUZZLE_SIDE] + i);
+		for (int i = 0; i < side; i++) {
+			for (int j = 0; j < side; j++) {
+				System.out.print(this.currBoard[i * side + j] + " ");
 			}
+			System.out.println();
 		}
+		System.out.println();
 	}
 	
 	/**
@@ -69,18 +73,43 @@ public class State {
 		int temp = cpy[c1];
 		cpy[c1] = currBoard[c2];
 		cpy[c2] = temp;
-		return new State(cpy);
+		return new State(cpy, size, side);
 	}
 	
 
 	private int[] copyState(int[] state) {
-		int[] ret = new int[TOTAL_CELLS];
-		System.arraycopy(state, 0, ret, 0, TOTAL_CELLS);
+		int[] ret = new int[size];
+		System.arraycopy(state, 0, ret, 0, size);
 		return ret;
 	}
 	
 	
 	private int findHole() {
-		return Arrays.asList(currBoard).indexOf(HOLE);
+		for (int i = 0; i < currBoard.length; i++)
+			if (currBoard[i] == HOLE)
+				return i;
+
+		return -1;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return Arrays.equals(this.getCurrBoard(), ((State) obj).getCurrBoard());
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+	public int getSide() {
+		return side;
+	}
+
+	public void setSide(int side) {
+		this.side = side;
 	}
 }
