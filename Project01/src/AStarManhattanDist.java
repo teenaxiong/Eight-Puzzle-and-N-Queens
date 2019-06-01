@@ -8,45 +8,35 @@ public class AStarManhattanDist extends AStar {
 	@Override
 	public int heuristicFn(State s) {
 		int manhattanValue = 0;
-		int[] currentArray1d = s.getCurrBoard();
-		int[][] currentArray2d = new int[side][side];
-
-		int[] goalArray1d = goal.getCurrState().getCurrBoard();
-		int[][] goalArray2d = new int[side][side];
-
-		// converting array1d to a 2d array for the goal state
-		for (int x = 0; x < side; x++) {
-			for (int y = 0; y < side; y++) {
-				goalArray2d[x][y] = goalArray1d[(x * side) + y];
+		
+		for (int i = 0; i < size; i++) {
+			int value = s.getCurrBoard()[i];
+			int goalIdx = goal.getCurrState().findIndex(value);
+			
+			if (value != s.getHoleValue() && goalIdx != i) { // curr value is in wrong place
+				// actual row and column
+				int actualRow = getRow(i);
+				int actualCol = getColumn(i);
+				
+				// goal row and column
+				int goalRow = getRow(goalIdx);
+				int goalCol = getColumn(goalIdx);
+				
+				manhattanValue += (Math.abs(goalRow - actualRow) + Math.abs(goalCol - actualCol));
 			}
-		}
-
-		// converting array1d to a 2d array for the current state
-		for (int x = 0; x < side; x++) {
-			for (int y = 0; y < side; y++) {
-				currentArray2d[x][y] = currentArray1d[(x * side) + y];
-			}
-		}
-
-		// comparing and calculating heuristic value
-		//
-	
-		for (int x = 0; x < side; x++) {
-			for (int y = 0; y < side; y++) 
-			{
-				for (int z = 0; z < side; z++) {
-					for (int j = 0; j < side; j++) {
-						if (currentArray2d[x][y] == goalArray2d[z][j]) {
-							manhattanValue = manhattanValue + (Math.abs(x - z) + Math.abs(y - j));
-						}
-					}
-				}
-
-			}
+			
 		}
 
 		return manhattanValue;
 
+	}
+	
+	private int getRow(int i) {
+		return i / side;
+	}
+	
+	private int getColumn(int i) {
+		return i % side;
 	}
 
 }

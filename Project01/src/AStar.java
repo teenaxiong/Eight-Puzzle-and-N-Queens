@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
 
 public abstract class AStar {
@@ -25,60 +25,76 @@ public abstract class AStar {
 	}
 	
 	public void runAlgorithm() {
-		Queue<Node> open = new LinkedList<Node>();
+		
+		// open list
+		List<Node> open = new ArrayList<Node>();
+		
+		// close list
+		List<Node> closed = new ArrayList<Node>();
+		
+		// add first node to open list
 		open.add(root);
+		
+		Node currNode = null;
 		
 		while (!open.isEmpty()) {
 			
-			Node temp = open.poll();
+			// return node that has smallest cost in open list
+			currNode = open.get(0);
 			
 			// perform Goal test
-			if (!this.isGoal(temp)) { // not a goal
+			if (!this.isGoal(currNode)) { // not a goal
 				
+				// generate successors for curr node
+				ArrayList<State> successors = currNode.getCurrState().genSuccessors();
+				
+				// loop through all successors of curr node
+				for (State s : successors) {
+					Node endNode = generateNode(s, currNode);
+					
+					// check if endNode in closed list
+					if (closed.contains(endNode)) {
+						int endNodeRecordIdx = closed.indexOf(endNode);
+						Node endNodeRecord = closed.get(endNodeRecordIdx);
+						
+						// check if found shorter route
+						if (endNodeRecord.getTotalCost() > endNode.getTotalCost()) {
+							closed.remove(endNodeRecordIdx);
+						}
+						
+					} else if (!open.contains(endNode)) {
+						
+						// add endNode to open list
+						open.add(endNode);
+						
+						// sort open list to place lowest cost node in front
+						Collections.sort(open);
+						
+						// increment number of generated nodes
+						nodeGenerated++;
+					}
+					
+				}
+				
+				// remove curr node from open list
+				open.remove(0);
+				
+				// add curr to closed list
+				closed.add(currNode);
+				
+				// increment number of expanded nodes
 				nodeExpanded++;
-				
-				// array list to store successor nodes
-				ArrayList<Node> nodeSuccessors = new ArrayList<Node>();
-				
-				// generate successors for temp node
-				ArrayList<State> tempSuccessors = temp.getCurrState().genSuccessors();
-				
-				// loop through all successors of temp node
-				for (State s : tempSuccessors) {
-					Node addedNode = generateNode(s, temp);
-					
-					// add addedNode to list if it is not a repeated state
-					if (!this.checkRepeatedState(addedNode)) {
-						nodeSuccessors.add(addedNode);
-					}
-					
-				}
-				
-				// find lowest cost among successors
-				if (!nodeSuccessors.isEmpty()) { // list of successors is not empty
-					
-					// set lowest cost to the cost of first node in the list
-					int lowestCost = nodeSuccessors.get(0).getTotalCost();
-					
-					for (Node n : nodeSuccessors) {
-						if (n.getTotalCost() < lowestCost) {
-							lowestCost = n.getTotalCost();
-						}
-					}
-					
-					// add nodes that has lowest cost to open queue
-					for (Node n : nodeSuccessors) {
-						if (n.getTotalCost() == lowestCost) {
-							open.add(n);
-						}
-					}
-				}
-				
 			
 			} else {	// is a goal
-				print(temp);
+				break;
 			}
 			
+		}
+		
+		if (!isGoal(currNode)) { // empty open list and found no goal
+			System.out.println("Cannot find any path to goal state");
+		} else {
+			print(currNode);
 		}
 	}
 	
@@ -118,28 +134,12 @@ public abstract class AStar {
 	private Node generateNode(State s, Node parent) {
 		int costSoFar = parent.getCostSoFar() + STEP_COST;
 		int totalCost = costSoFar + heuristicFn(s);
-		this.nodeGenerated++;
 		return new Node(s, parent, costSoFar, totalCost);
 	}
 	
 	private boolean isGoal(Node node) {
 		return Arrays.equals(node.getCurrState().getCurrBoard(), 
 							 this.goal.getCurrState().getCurrBoard());
-	}
-	
-	private boolean checkRepeatedState(Node n) {
-		State s = n.getCurrState();
-		return hasRepeatedState(n.getParentNode(), s);
-	}
-
-	private boolean hasRepeatedState(Node node, State s) {
-		if (node == null) {
-			return false;
-		}
-		if (node.getCurrState().equals(s)) {
-			return true;
-		}
-		return hasRepeatedState(node.getParentNode(), s);
 	}
 
 }

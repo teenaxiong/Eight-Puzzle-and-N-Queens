@@ -17,7 +17,7 @@ public class State {
 	
 	public ArrayList<State> genSuccessors() {
 		
-		int holeIdx = findHole();
+		int holeIdx = findIndex(HOLE);
 		
 		ArrayList<State> successors = new ArrayList<State>();
 		
@@ -44,6 +44,14 @@ public class State {
 		return successors;
 	}
 	
+	public int findIndex(int value) {
+		for (int i = 0; i < currBoard.length; i++)
+			if (currBoard[i] == value)
+				return i;
+
+		return -1;
+	}
+	
 	public void printCurrBoard() {
 		for (int i = 0; i < side; i++) {
 			for (int j = 0; j < side; j++) {
@@ -68,6 +76,10 @@ public class State {
 		this.currBoard = currState;
 	}
 	
+	public int getHoleValue() {
+		return HOLE;
+	}
+	
 	private State swap(int c1, int c2) {
 		int[] cpy = copyState(currBoard);
 		int temp = cpy[c1];
@@ -81,15 +93,6 @@ public class State {
 		int[] ret = new int[size];
 		System.arraycopy(state, 0, ret, 0, size);
 		return ret;
-	}
-	
-	
-	private int findHole() {
-		for (int i = 0; i < currBoard.length; i++)
-			if (currBoard[i] == HOLE)
-				return i;
-
-		return -1;
 	}
 	
 	@Override
