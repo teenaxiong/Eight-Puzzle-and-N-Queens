@@ -1,6 +1,6 @@
 
-public class Node {
-	
+public class Node implements Comparable<Node>{
+
 	private Node parentNode;
 	private State currState;
 	private int costSoFar = 0;
@@ -69,4 +69,14 @@ public class Node {
 		this.totalCost = totalCost;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		Node n = (Node) obj;
+		return this.getCurrState().equals(n.getCurrState());
+	}
+
+	@Override
+	public int compareTo(Node node) {
+		return this.getTotalCost() - node.getTotalCost();
+	}
 }
