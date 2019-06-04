@@ -4,8 +4,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * An abstract class that performs A* algorithm. 
+ * It requires a child class to implement an abstract 
+ * method to calculate heuristic value.
+ */
 public abstract class AStar {
 
+	/** cost of moving one step */ 
 	private final static int STEP_COST = 1;
 	
 	int nodeGenerated = 0;
@@ -98,6 +104,10 @@ public abstract class AStar {
 		}
 	}
 	
+	/**
+	 * Print results after algorithm being run
+	 * @param temp
+	 */
 	private void print(Node temp) {
 		// push final node to list
 		path.push(temp);
@@ -120,6 +130,10 @@ public abstract class AStar {
 		
 	}
 	
+	/**
+	 * Recursively traverse from the last node to root 
+	 * @param temp
+	 */
 	private void addToPath(Node temp) {
 		if (temp != null) {
 			path.push(temp);
@@ -137,6 +151,11 @@ public abstract class AStar {
 		return new Node(s, parent, costSoFar, totalCost);
 	}
 	
+	/**
+	 * Check if current node contains goal state
+	 * @param node
+	 * @return
+	 */
 	private boolean isGoal(Node node) {
 		return Arrays.equals(node.getCurrState().getCurrBoard(), 
 							 this.goal.getCurrState().getCurrBoard());

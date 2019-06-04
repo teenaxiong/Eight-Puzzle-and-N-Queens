@@ -1,11 +1,18 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * State class contains position of numbers on 
+ * the board.
+ */
 public class State {
 
+	/** Hole's value */
 	private final static int HOLE = 0;
 	
+	/** an array to store position of numbers */
 	private int[] currBoard;
+	
 	private int size;
 	private int side;
 	
@@ -15,6 +22,11 @@ public class State {
 		this.side = side;
 	}
 	
+	/**
+	 * Generate potential successors 
+	 * based on current state
+	 * @return list of successors
+	 */
 	public ArrayList<State> genSuccessors() {
 		
 		int holeIdx = findIndex(HOLE);
@@ -44,6 +56,11 @@ public class State {
 		return successors;
 	}
 	
+	/**
+	 * Find the index of value on the board
+	 * @param value
+	 * @return index of value found
+	 */
 	public int findIndex(int value) {
 		for (int i = 0; i < currBoard.length; i++)
 			if (currBoard[i] == value)
@@ -52,6 +69,9 @@ public class State {
 		return -1;
 	}
 	
+	/**
+	 * Print the board in 2D format
+	 */
 	public void printCurrBoard() {
 		for (int i = 0; i < side; i++) {
 			for (int j = 0; j < side; j++) {
@@ -80,6 +100,12 @@ public class State {
 		return HOLE;
 	}
 	
+	/**
+	 * Swap two adjacent elements on the board
+	 * @param c1
+	 * @param c2
+	 * @return new state
+	 */
 	private State swap(int c1, int c2) {
 		int[] cpy = copyState(currBoard);
 		int temp = cpy[c1];
@@ -87,8 +113,12 @@ public class State {
 		cpy[c2] = temp;
 		return new State(cpy, size, side);
 	}
-	
 
+	/**
+	 * Clone a new state
+	 * @param state
+	 * @return new state
+	 */
 	private int[] copyState(int[] state) {
 		int[] ret = new int[size];
 		System.arraycopy(state, 0, ret, 0, size);

@@ -1,9 +1,16 @@
 
 public class Node implements Comparable<Node>{
 
+	/** Store parent node */
 	private Node parentNode;
+	
+	/** Store current state of the node */
 	private State currState;
+	
+	/** Cost to get from initial state to curr state */
 	private int costSoFar = 0;
+	
+	/** Sum of costSoFar and heuristic cost */
 	private int totalCost = 0;
 	
 	public Node(State state, Node parent, int costSoFar, int totalCost) {
