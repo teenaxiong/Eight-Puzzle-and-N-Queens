@@ -31,9 +31,15 @@ public class HillClimbing {
 
 		while (heuristic != 0) {
 			for (int x = 0; x < initial.length; x++) {
-				// this loops enable you to move the Queen down the row
+				// this loop enable you to move the Queen down the row
 				for (int y = 0; y < initial.length; y++) {
 					tempHeuristic = calculateHeuristic(tempQueen);
+					System.out.println("Heuristic: " + tempHeuristic);
+					stepCounts++; 
+					System.out.println();
+					print(tempQueen); 
+					System.out.println("Steps: " + stepCounts);
+					System.out.println("-----------------------------");
 
 					// if the new heuristic is lower then the current one,
 					// that means that is the best board. we are closer to our goal
@@ -49,21 +55,25 @@ public class HillClimbing {
 					// moves the queen down one row at a time (unless at the very end, then moves
 					// back to 0)
 					tempQueen[x].moveQueen(initial.length);
-					stepCounts++; 
-					System.out.println();
-					print(tempQueen); 
-					System.out.println("Steps: " + stepCounts);
-					System.out.println("-----------------------------");
+					
 				}
 			}
-		}
-		
-		if(heuristic==0) {
-			System.out.println();
-			System.out.println("Goal Reached");
-			print(bestQueen); 
-			System.out.println("Steps to reach goal: " + stepForBestCounts);
-		}
+			
+			//Have completed moving the queens all around the board;
+			//Either succeed or fail to find goal; 
+			if(heuristic != 0) {
+				System.out.println("Fail to succeed");
+				System.out.println("Steps to failure: " + stepCounts);
+				heuristic = 0; //to get out of while loop
+			}else {
+				if(heuristic==0) {
+					System.out.println();
+					System.out.println("Goal Reached");
+					print(bestQueen); 
+					System.out.println("Steps to reach goal: " + stepForBestCounts);
+				}
+			}
+		}		
 	}
 
 	/*

@@ -5,7 +5,7 @@ public class EightQueen {
 		// TODO Auto-generated method stub
 
 		//For testing purposes
-		Queen [] initial = {new Queen(0,1), new Queen(1, 3), new Queen(1, 0), new Queen(3,2)}; 
+		Queen [] initial = {new Queen(2,1), new Queen(1, 3), new Queen(0, 0), new Queen(3,2)}; 
 		
 	
 		
