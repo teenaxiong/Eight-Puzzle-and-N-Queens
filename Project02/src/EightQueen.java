@@ -5,15 +5,15 @@ public class EightQueen {
 		// TODO Auto-generated method stub
 
 		//For testing purposes
-		Queen [] initial = {new Queen(2,1), new Queen(1, 3), new Queen(0, 0), new Queen(3,2)}; 
+		Queen [] initial = {new Queen(1,1), new Queen(1, 3), new Queen(2, 0), new Queen(2,2)}; 
 		
 	
 		
-		HillClimbing hillC = new HillClimbing(initial);
+		HillClimbing hillC = new HillClimbing();
 		System.out.println("Initial state:");
 		hillC.print(initial);
 		System.out.println();
-		hillC.runHillClimbingAlgorithm();
+		hillC.runHillClimbingAlgorithm(initial);
 	
 	}
 	

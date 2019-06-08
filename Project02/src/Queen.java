@@ -1,12 +1,14 @@
 
 public class Queen {
 
-	private int row, column;
+	private int row, column,tempRow, tempColumn;
 
 	public Queen(int row, int column) {
 		super();
 		this.row = row;
+		this.tempRow = row;
 		this.column = column;
+		this.tempColumn = column; 
 	}
 	
 	/*
@@ -36,9 +38,10 @@ public class Queen {
 	}
 	
 	public void moveQueen(int size) {
-		if(this.row != size-1) {
+		if(row != size-1) {
 			row++;
 		}else row = 0; 
+		
 	}
 
 	public int getRow() {

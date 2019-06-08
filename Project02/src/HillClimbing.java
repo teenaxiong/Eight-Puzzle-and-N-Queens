@@ -1,79 +1,84 @@
 
 public class HillClimbing {
 
-	Queen[] initial = null;
-	private int heuristic = 0;
+	Queen[] currentQueen = null;
+	private int currentHeuristic = 0;
 	private int tempHeuristic = 0;
 	private int stepCounts = 0; 
 	private int stepForBestCounts = 0; 
 
-	public HillClimbing(Queen[] initial) {
+	public HillClimbing() {
 		super();
-		this.initial = initial;
 	}
 
 	/*
 	 * This method performs the hill climbing alogorithm.
 	 */
-	public void runHillClimbingAlgorithm() {
+	public void runHillClimbingAlgorithm(Queen[] currentQueen) {
+		this.currentQueen = currentQueen;
 
-		Queen[] bestQueen = new Queen[initial.length];
-		Queen[] tempQueen = new Queen[initial.length];
+		Queen[] bestQueen = new Queen[currentQueen.length];
+		Queen[] tempQueen = new Queen[currentQueen.length];
 
 		// copy the initial board into the tempQueen and bestQueen board.
-		for (int x = 0; x < initial.length; x++) {
-			bestQueen[x] = new Queen(initial[x].getRow(), initial[x].getColumn());
-			tempQueen[x] = new Queen(initial[x].getRow(), initial[x].getColumn());
-			;
+		for (int x = 0; x < currentQueen.length; x++) {
+			bestQueen[x] = new Queen(currentQueen[x].getRow(), currentQueen[x].getColumn());
+			tempQueen[x] = new Queen(currentQueen[x].getRow(), currentQueen[x].getColumn());
 		}
 
-		heuristic = calculateHeuristic(initial);
+		currentHeuristic = calculateHeuristic(currentQueen);
+		int bestHeuristic = calculateHeuristic(currentQueen);
 
-		while (heuristic != 0) {
-			for (int x = 0; x < initial.length; x++) {
+		tempHeuristic = calculateHeuristic(tempQueen);
+		
+		while (currentHeuristic != 0) {
+			for (int x = 0; x < currentQueen.length; x++) {
 				// this loop enable you to move the Queen down the row
-				for (int y = 0; y < initial.length; y++) {
+				for (int y = 0; y < currentQueen.length; y++) {
 					tempHeuristic = calculateHeuristic(tempQueen);
-					System.out.println("Heuristic: " + tempHeuristic);
 					stepCounts++; 
 					System.out.println();
 					print(tempQueen); 
-					System.out.println("Steps: " + stepCounts);
+					System.out.println("Steps: " + stepCounts);	
+					System.out.println("Heuristic: " + tempHeuristic);
 					System.out.println("-----------------------------");
-
+		
 					// if the new heuristic is lower then the current one,
 					// that means that is the best board. we are closer to our goal
-					if (tempHeuristic < heuristic) {
-						for (int z = 0; z < initial.length; z++) {
+					if (tempHeuristic < bestHeuristic) {
+						for (int z = 0; z < currentQueen.length; z++) {
 							bestQueen[z] = new Queen(tempQueen[z].getRow(), tempQueen[z].getColumn());
-							stepForBestCounts++; 
+							
 						}
-						heuristic = tempHeuristic;
+						stepForBestCounts++; 
+						bestHeuristic = tempHeuristic;
 					}
 
 					// counting how many times we are iterating through the rows.
 					// moves the queen down one row at a time (unless at the very end, then moves
 					// back to 0)
-					tempQueen[x].moveQueen(initial.length);
+					tempQueen[x].moveQueen(currentQueen.length);
 					
 				}
 			}
 			
-			//Have completed moving the queens all around the board;
-			//Either succeed or fail to find goal; 
-			if(heuristic != 0) {
-				System.out.println("Fail to succeed");
-				System.out.println("Steps to failure: " + stepCounts);
-				heuristic = 0; //to get out of while loop
-			}else {
-				if(heuristic==0) {
-					System.out.println();
-					System.out.println("Goal Reached");
-					print(bestQueen); 
-					System.out.println("Steps to reach goal: " + stepForBestCounts);
-				}
+			/*
+			 * If bestHeuristic is 0, we found the goal.
+			 * If bestHeuristic of neighbor queen is less then the current queen,
+			 * we do another hill climbing search on the neighbor queen. 
+			 */
+			if(bestHeuristic == 0) {
+				System.out.println();
+				System.out.println("Goal Reached");
+				print(bestQueen); 
+				System.out.println("Steps to reach goal: " + stepForBestCounts);
+				currentHeuristic = bestHeuristic; 
+			}else if(currentHeuristic > bestHeuristic) {
+				runHillClimbingAlgorithm(bestQueen); 				
 			}
-		}		
+			
+		}
+				
 	}
 
 	/*
