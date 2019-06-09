@@ -1,133 +1,97 @@
+import java.util.ArrayList;
 
 public class HillClimbing {
+	
+	private int sideWalk = 1;
+	private boolean randomRestart = false;
+	private int restartCount = 0;
+	private int stepCount = 0;
+	private Node curr;
+	
 
-	Queen[] currentQueen = null;
-	private int currentHeuristic = 0;
-	private int tempHeuristic = 0;
-	private int stepCounts = 0; 
-	private int stepForBestCounts = 0; 
-
-	public HillClimbing() {
-		super();
+	public HillClimbing(int n, int sideWalk, boolean randomRestart) {
+		this.sideWalk = sideWalk;
+		this.randomRestart = randomRestart;
+		curr = new Node(n);
 	}
 
-	/*
-	 * This method performs the hill climbing alogorithm.
+	/**
+	 * This method performs the hill climbing algorithm.
+	 * @return isFound
 	 */
-	public void runHillClimbingAlgorithm(Queen[] currentQueen) {
-		this.currentQueen = currentQueen;
-
-		Queen[] bestQueen = new Queen[currentQueen.length];
-		Queen[] tempQueen = new Queen[currentQueen.length];
-
-		// copy the initial board into the tempQueen and bestQueen board.
-		for (int x = 0; x < currentQueen.length; x++) {
-			bestQueen[x] = new Queen(currentQueen[x].getRow(), currentQueen[x].getColumn());
-			tempQueen[x] = new Queen(currentQueen[x].getRow(), currentQueen[x].getColumn());
-		}
-
-		currentHeuristic = calculateHeuristic(currentQueen);
-		int bestHeuristic = calculateHeuristic(currentQueen);
-
-		tempHeuristic = calculateHeuristic(tempQueen);
+	public boolean runAlgorithm() {
 		
-		while (currentHeuristic != 0) {
-			for (int x = 0; x < currentQueen.length; x++) {
-				// this loop enable you to move the Queen down the row
-				for (int y = 0; y < currentQueen.length; y++) {
-					tempHeuristic = calculateHeuristic(tempQueen);
-					stepCounts++; 
-					System.out.println();
-					print(tempQueen); 
-					System.out.println("Steps: " + stepCounts);	
-					System.out.println("Heuristic: " + tempHeuristic);
-					System.out.println("-----------------------------");
+		int steps = sideWalk;
 		
-					// if the new heuristic is lower then the current one,
-					// that means that is the best board. we are closer to our goal
-					if (tempHeuristic < bestHeuristic) {
-						for (int z = 0; z < currentQueen.length; z++) {
-							bestQueen[z] = new Queen(tempQueen[z].getRow(), tempQueen[z].getColumn());
-							
-						}
-						stepForBestCounts++; 
-						bestHeuristic = tempHeuristic;
-					}
-
-					// counting how many times we are iterating through the rows.
-					// moves the queen down one row at a time (unless at the very end, then moves
-					// back to 0)
-					tempQueen[x].moveQueen(currentQueen.length);
-					
-				}
+		curr.reset();
+		curr.calculateHeuristicCost();
+		
+		int bestHeuristicVal = curr.getHeuristicValue();
+		
+		while(!isGoal(curr) && steps > 0) {
+			
+			stepCount++;
+			
+			ArrayList<Node> successors = curr.genSuccessors();
+			Node bestSuccessor = successors.get(this.findSmallest(successors));
+			
+			if (bestSuccessor.getHeuristicValue() < bestHeuristicVal) {
+				curr = bestSuccessor;
+				bestHeuristicVal = bestSuccessor.getHeuristicValue();
+			} else if (bestSuccessor.getHeuristicValue() == bestHeuristicVal) {
+				steps--;
 			}
 			
-			/*
-			 * If bestHeuristic is 0, we found the goal.
-			 * If bestHeuristic of neighbor queen is less then the current queen,
-			 * we do another hill climbing search on the neighbor queen. 
-			 */
-			if(bestHeuristic == 0) {
-				System.out.println();
-				System.out.println("Goal Reached");
-				print(bestQueen); 
-				System.out.println("Steps to reach goal: " + stepForBestCounts);
-				currentHeuristic = bestHeuristic; 
-			}else if(currentHeuristic > bestHeuristic) {
-				runHillClimbingAlgorithm(bestQueen); 				
+			if (randomRestart && steps == 0 && !isGoal(curr)) {
+				curr.reset();
+				curr.calculateHeuristicCost();
+				bestHeuristicVal = curr.getHeuristicValue();
+				steps = sideWalk;
+				this.restartCount++;
 			}
 			
 		}
+		
+		return isGoal(curr);
 				
 	}
-
-	/*
-	 * Find the heuristic value for the current board
-	 */
-	private int calculateHeuristic(Queen[] initial) {
-		int calHeuristicVal = 0;
-		for (int x = 0; x < initial.length; x++) {
-			for (int j = x + 1; j < initial.length; j++) {
-				// calls the pathCross function, were it determines if there is another queen in
-				// the
-				// same row, column, or diagonal. If there is, then heuristic value is
-				// incremented.
-				if (initial[x].pathCross(initial[j])) {
-					calHeuristicVal++;
-				}
-			}
+	
+	public void print() {
+		if (randomRestart) {
+			
 		}
-		return calHeuristicVal;
 	}
 
-	/*
-	 * This will display the board to the user
-	 */
-	public void print(Queen[] queen) {
-
-		// Create a string 2-D array
-		String[][] board = new String[queen.length][queen.length];
-
-		// Iterating through the queen array (which holds all the Queen)
-		// getting each Queen's row and column, and assigning the row/column to
-		// board[row][column] and designated it a "Q" (Representing the location of
-		// Queen).
-		for (int x = 0; x < queen.length; x++) {
-			board[queen[x].getRow()][queen[x].getColumn()] = "Q";
-		}
-
-		
-		// Iterating through the board, and displaying it to user
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board.length; j++) {
-				if (board[i][j] == null) {
-					System.out.print(" * ");
-				} else
-					System.out.print(" " + board[i][j] + " ");
+	private boolean isGoal(Node curr) {
+		return curr.getHeuristicValue() == 0;
+	}
+	
+	private int findSmallest(ArrayList<Node> list) {
+		int cost = list.get(0).getHeuristicValue();
+		int idx = 0;
+		for (int i = 1; i < list.size(); i++) {
+			if (list.get(i).getHeuristicValue() < cost) {
+				idx = i;
+				cost = list.get(i).getHeuristicValue();
 			}
-			System.out.println();
 		}
-		
+		return idx;
+	}
+
+	public int getRestartCount() {
+		return restartCount;
+	}
+
+	public void setRestartCount(int restartCount) {
+		this.restartCount = restartCount;
+	}
+
+	public int getStepCount() {
+		return stepCount;
+	}
+
+	public void setStepCount(int stepCount) {
+		this.stepCount = stepCount;
 	}
 
 }
