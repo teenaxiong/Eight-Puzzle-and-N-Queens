@@ -42,23 +42,23 @@ public class EightQueen {
 	
 	private static void run() {
 		hc = new HillClimbing(n);
+		
+		if (type == HILL_CLIMBING_BASIC) {
+			title = "Hill Climbing with Steepest Ascent";
+			initAlg(1, false);
+		} else if (type == HILL_CLIMBING_BASIC_SIDEWALK) {
+			title = "Hill Climbing with Side Walk";
+			initAlg(SIDE_WALK_STEPS, false);
+		} else if (type == HILL_CLIMBING_RESTART) {
+			title = "Hill Climbing with Random Restart, No Sidewalk";
+			initAlg(1, true);
+		} else if (type == HILL_CLIMBING_RESTART_SIDEWALK) {
+			title = "Hill Climbing with Random Restart and Sidewalk";
+			initAlg(SIDE_WALK_STEPS, true);
+		}
 
 		for (int i = 0; i < trials; i++) {
 			boolean result = false;
-			
-			if (type == HILL_CLIMBING_BASIC) {
-				title = "Hill Climbing with Steepest Ascent";
-				initAlg(1, false);
-			} else if (type == HILL_CLIMBING_BASIC_SIDEWALK) {
-				title = "Hill Climbing with Side Walk";
-				initAlg(SIDE_WALK_STEPS, false);
-			} else if (type == HILL_CLIMBING_RESTART) {
-				title = "Hill Climbing with Random Restart, No Sidewalk";
-				initAlg(1, true);
-			} else if (type == HILL_CLIMBING_RESTART_SIDEWALK) {
-				title = "Hill Climbing with Random Restart and Sidewalk";
-				initAlg(SIDE_WALK_STEPS, true);
-			}
 			
 			result = hc.runAlgorithm();
 			
