@@ -11,12 +11,14 @@ public class EightQueen {
 	static int n;
 	static int trials;
 	static int type;
+	static String title;
 	static boolean restart = false;
 	static int totalFailureSteps = 0;
 	static int totalSuccessSteps = 0;
 	static int successCount = 0;
 	static int failureCount = 0;
 	static int restartCount = 0;
+	static HillClimbing hc = null;
 	
 	
 	public static void main(String[] args) {
@@ -28,6 +30,7 @@ public class EightQueen {
 				type = Integer.parseInt(args[0]);
 				n = Integer.parseInt(args[1]);
 				trials = Integer.parseInt(args[2]);
+				restart = (type > 2) ? true : false;
 				run();
 				print();
 			}
@@ -38,20 +41,23 @@ public class EightQueen {
 	}
 	
 	private static void run() {
-		boolean result = false;
-		HillClimbing hc = null;
-		
+		hc = new HillClimbing(n);
+
 		for (int i = 0; i < trials; i++) {
+			boolean result = false;
+			
 			if (type == HILL_CLIMBING_BASIC) {
-				hc = new HillClimbing(n, 1, false);
+				title = "Hill Climbing with Steepest Ascent";
+				initAlg(1, false);
 			} else if (type == HILL_CLIMBING_BASIC_SIDEWALK) {
-				hc = new HillClimbing(n, SIDE_WALK_STEPS, false);
+				title = "Hill Climbing with Side Walk";
+				initAlg(SIDE_WALK_STEPS, false);
 			} else if (type == HILL_CLIMBING_RESTART) {
-				hc = new HillClimbing(n, SIDE_WALK_STEPS, true);
-				restart = true;
+				title = "Hill Climbing with Random Restart, No Sidewalk";
+				initAlg(1, true);
 			} else if (type == HILL_CLIMBING_RESTART_SIDEWALK) {
-				hc = new HillClimbing(n, SIDE_WALK_STEPS, true);
-				restart = true;
+				title = "Hill Climbing with Random Restart and Sidewalk";
+				initAlg(SIDE_WALK_STEPS, true);
 			}
 			
 			result = hc.runAlgorithm();
@@ -69,6 +75,8 @@ public class EightQueen {
 	}
 	
 	private static void print() {
+		System.out.println(title + "\n");
+		
 		if (restart) {
 			printRestart();
 		} else {
@@ -78,18 +86,23 @@ public class EightQueen {
 	}
 
 	private static void printBasic() {
-		
+
 		System.out.println("Total: " + trials + 
 				". Success: " + successCount +
 				". Failure: " + failureCount);
 		
-		System.out.println("Average number of steps when success: " + totalSuccessSteps);
-		System.out.println("Average number of steps when failure: " + totalFailureSteps);
+		System.out.println("Average number of steps when success: " + totalSuccessSteps / trials);
+		System.out.println("Average number of steps when failure: " + totalFailureSteps / trials);
 	}
 	
 	private static void printRestart() {
-		System.out.println("Average number of random restart: " + restartCount);
-		System.out.println("Average number of steps: " + totalSuccessSteps);
+		System.out.println("Average number of random restart: " + restartCount / trials);
+		System.out.println("Average number of steps: " + totalSuccessSteps / trials);
+	}
+	
+	private static void initAlg(int sideWalk, boolean restart) {
+		hc.setStepCount(sideWalk);
+		hc.setRandomRestart(restart);
 	}
 	
 }
