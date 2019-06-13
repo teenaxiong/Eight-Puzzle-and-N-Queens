@@ -36,7 +36,7 @@ public class Node {
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				int idx = j * n + i;
-				if (idx != board[i]) {
+				if (idx != board[i]) { 
 					Node node = new Node(n);
 					int[] b = this.copy(board, n);
 					b[i] = idx;
@@ -47,6 +47,7 @@ public class Node {
 				}
 			}
 		}
+	
 		return successors;
 		
 	}
@@ -80,12 +81,16 @@ public class Node {
 		
 	}
 	
+	/*
+	 * Generate a random board by randomly picking N number from 0-63. This generated number will
+	 * represent the index location of the queen
+	 */
 	private void genRandomBoard() {
-
 		Random r = new Random();
 		
 		for (int i = 0; i < n; i++) {
 			board[i] = r.nextInt(n - 1) * n + i;
+
 		}
 	}
 	
@@ -139,6 +144,23 @@ public class Node {
 
 	public void setBoard(int[] board) {
 		this.board = board;
+	}
+	
+	/**
+	 * Prints the board 
+	 */
+	public void printBoard() {
+		for (int i = 0; i < n; i++) {
+			int row = getRow(board[i]); //getting the row of the queen 	
+			int column = getColumn(board[i]); //getting the column of the queen
+			for (int j = 0; j < n; j++) {
+				if(j==row && i==column) { 
+					System.out.print(" Q ");
+				}else System.out.print(" * ");
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 	
 }

@@ -39,11 +39,13 @@ public class HillClimbing {
 			
 			ArrayList<Node> successors = curr.genSuccessors();
 			Node bestSuccessor = successors.get(this.findSmallest(successors));
-			
+
 			if (bestSuccessor.getHeuristicValue() < bestHeuristicVal) {
 				curr = bestSuccessor;
+				curr.printBoard();
 				bestHeuristicVal = bestSuccessor.getHeuristicValue();
-			} else {
+			} else if (bestSuccessor.getHeuristicValue() == bestHeuristicVal) {
+				curr.printBoard();
 				steps--;
 			}
 			
