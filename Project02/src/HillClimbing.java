@@ -4,11 +4,16 @@ public class HillClimbing {
 	
 	private int sideWalk = 1;
 	private boolean randomRestart = false;
+
 	private int restartCount = 0;
 	private int stepCount = 0;
 	private Node curr;
 	
 
+	public HillClimbing(int n) {
+		curr = new Node(n);
+	}
+	
 	public HillClimbing(int n, int sideWalk, boolean randomRestart) {
 		this.sideWalk = sideWalk;
 		this.randomRestart = randomRestart;
@@ -58,11 +63,7 @@ public class HillClimbing {
 				
 	}
 	
-	public void print() {
-		if (randomRestart) {
-			
-		}
-	}
+	public void print() {}
 
 	private boolean isGoal(Node curr) {
 		return curr.getHeuristicValue() == 0;
@@ -96,4 +97,7 @@ public class HillClimbing {
 		this.stepCount = stepCount;
 	}
 
+	public void setRandomRestart(boolean randomRestart) {
+		this.randomRestart = randomRestart;
+	}
 }
