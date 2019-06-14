@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class HillClimbing {
 	
@@ -8,10 +10,12 @@ public class HillClimbing {
 	private int restartCount = 0;
 	private int stepCount = 0;
 	private Node curr;
+	private Queue<Node> queue;
 	
 
 	public HillClimbing(int n) {
 		curr = new Node(n);
+		queue = new LinkedList<>();
 	}
 	
 	public HillClimbing(int n, int sideWalk, boolean randomRestart) {
@@ -30,6 +34,7 @@ public class HillClimbing {
 		
 		curr.reset();
 		curr.calculateHeuristicCost();
+		this.queue.clear();
 		
 		int bestHeuristicVal = curr.getHeuristicValue();
 		
@@ -41,11 +46,10 @@ public class HillClimbing {
 			Node bestSuccessor = successors.get(this.findSmallest(successors));
 
 			if (bestSuccessor.getHeuristicValue() < bestHeuristicVal) {
+				queue.add(new Node(curr.getN(), curr.getBoard(), curr.getHeuristicValue()));
 				curr = bestSuccessor;
-				curr.printBoard();
 				bestHeuristicVal = bestSuccessor.getHeuristicValue();
-			} else if (bestSuccessor.getHeuristicValue() == bestHeuristicVal) {
-				curr.printBoard();
+			} else {
 				steps--;
 			}
 			
@@ -54,11 +58,16 @@ public class HillClimbing {
 				curr.calculateHeuristicCost();
 				bestHeuristicVal = curr.getHeuristicValue();
 				steps = sideWalk;
+				this.queue.clear();
 				this.restartCount++;
 			}
 			
 		}
 		
+		if (isGoal(curr)) {
+			curr.printBoard();
+			queue.add(new Node(curr.getN(), curr.getBoard(), curr.getHeuristicValue()));
+		}
 		return isGoal(curr);
 				
 	}
@@ -99,5 +108,13 @@ public class HillClimbing {
 
 	public void setRandomRestart(boolean randomRestart) {
 		this.randomRestart = randomRestart;
+	}
+
+	public Queue<Node> getQueue() {
+		return queue;
+	}
+
+	public void setQueue(Queue<Node> queue) {
+		this.queue = queue;
 	}
 }
