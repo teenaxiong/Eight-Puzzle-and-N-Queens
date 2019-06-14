@@ -4,12 +4,17 @@ import java.util.Random;
 public class Node {
 	private int[] board;
 	private int heuristicValue;
-	private Node parent;
 	private int n;
 	
 	public Node(int n) {
 		this.n = n;
 		board = new int[n];
+	}
+	
+	public Node(int n, int[] board, int heuristicValue) {
+		this.n = n;
+		this.board = board;
+		this.heuristicValue = heuristicValue;
 	}
 	
 	public void calculateHeuristicCost() {
@@ -22,7 +27,6 @@ public class Node {
 	
 	public void reset() {
 		this.genRandomBoard();
-		this.setParent(null);
 	}
 	
 	/**
@@ -42,7 +46,6 @@ public class Node {
 					b[i] = idx;
 					node.setBoard(b);
 					node.calculateHeuristicCost();
-					node.parent = this;
 					successors.add(node);
 				}
 			}
@@ -82,7 +85,7 @@ public class Node {
 	}
 	
 	/*
-	 * Generate a random board by randomly picking N number from 0-63. This generated number will
+	 * Generate a random board by randomly picking N number from 0 to n-1. This generated number will
 	 * represent the index location of the queen
 	 */
 	private void genRandomBoard() {
@@ -104,14 +107,6 @@ public class Node {
 		int[] ret = new int[n];
 		System.arraycopy(array, 0, ret, 0, n);
 		return ret;
-	}
-	
-	public Node getParent() {
-		return parent;
-	}
-
-	public void setParent(Node parent) {
-		this.parent = parent;
 	}
 
 	public int getN() {
@@ -149,18 +144,30 @@ public class Node {
 	/**
 	 * Prints the board 
 	 */
-	public void printBoard() {
+	public StringBuffer printBoard() {
+		
+		StringBuffer sb = new StringBuffer();
+		
+		int[] printBoard = new int[n*n];
+		
 		for (int i = 0; i < n; i++) {
-			int row = getRow(board[i]); //getting the row of the queen 	
-			int column = getColumn(board[i]); //getting the column of the queen
-			for (int j = 0; j < n; j++) {
-				if(j==row && i==column) { 
-					System.out.print(" Q ");
-				}else System.out.print(" * ");
-			}
-			System.out.println();
+			int idx = this.board[i];
+			printBoard[idx] = 1;
 		}
-		System.out.println();
+		
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				int idx = i * n + j;
+				if (printBoard[idx] == 1) { 
+					sb.append(" Q ");
+				} else {
+					sb.append(" * ");
+				}
+			}
+			sb.append("\n");
+		}
+		return sb;
 	}
+	
 	
 }
