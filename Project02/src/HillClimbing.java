@@ -32,27 +32,33 @@ public class HillClimbing {
 		
 		int steps = sideWalk;
 		
-		curr.reset();
-		curr.calculateHeuristicCost();
-		this.queue.clear();
+		curr.reset(); // generate random boards
+		curr.calculateHeuristicCost(); // calculate heuristic cost
+		this.queue.clear(); // clear out a queue
 		
+		// set curr heuristic as the best heuristic found so far
 		int bestHeuristicVal = curr.getHeuristicValue();
 		
+		// check if goal is found or no more steps allowed
 		while(!isGoal(curr) && steps > 0) {
 			
 			stepCount++;
 			
+			// calculate heuristic for all cells based on position of the queens
 			ArrayList<Node> successors = curr.genSuccessors();
+			
+			// pick the smallest heuristic
 			Node bestSuccessor = successors.get(this.findSmallest(successors));
 
-			if (bestSuccessor.getHeuristicValue() < bestHeuristicVal) {
+			if (bestSuccessor.getHeuristicValue() < bestHeuristicVal) { // found a new successor
 				queue.add(new Node(curr.getN(), curr.getBoard(), curr.getHeuristicValue()));
 				curr = bestSuccessor;
 				bestHeuristicVal = bestSuccessor.getHeuristicValue();
-			} else {
-				steps--;
+			} else { // can't beat current best successor
+				steps--; // deduct allowed steps
 			}
 			
+			// reset configurations if randomRestart is true
 			if (randomRestart && steps == 0 && !isGoal(curr)) {
 				curr.reset();
 				curr.calculateHeuristicCost();
@@ -64,20 +70,31 @@ public class HillClimbing {
 			
 		}
 		
+		// add final node to queue if goal is found
 		if (isGoal(curr)) {
 			curr.printBoard();
 			queue.add(new Node(curr.getN(), curr.getBoard(), curr.getHeuristicValue()));
 		}
-		return isGoal(curr);
-				
+		
+		return isGoal(curr);	
 	}
 	
-	public void print() {}
-
+	/**
+	 * Test if curr state is a goal state.
+	 * Goal state has heuristic of 0
+	 * @param curr
+	 * @return
+	 */
 	private boolean isGoal(Node curr) {
 		return curr.getHeuristicValue() == 0;
 	}
 	
+	/**
+	 * Return the index of the cell that has the smallest
+	 * heuristic value
+	 * @param list
+	 * @return
+	 */
 	private int findSmallest(ArrayList<Node> list) {
 		int cost = list.get(0).getHeuristicValue();
 		int idx = 0;
