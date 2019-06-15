@@ -17,6 +17,9 @@ public class Node {
 		this.heuristicValue = heuristicValue;
 	}
 	
+	/**
+	 * Compute number of attacks on curr board
+	 */
 	public void calculateHeuristicCost() {
 		for (int i = 0; i < n; i++) {
 			for (int j = i + 1; j < n; j++) {
@@ -25,6 +28,9 @@ public class Node {
 		}
 	}
 	
+	/**
+	 * Generate new board
+	 */
 	public void reset() {
 		this.genRandomBoard();
 	}
@@ -84,7 +90,7 @@ public class Node {
 		
 	}
 	
-	/*
+	/**
 	 * Generate a random board by randomly picking N number from 0 to n-1. This generated number will
 	 * represent the index location of the queen
 	 */
