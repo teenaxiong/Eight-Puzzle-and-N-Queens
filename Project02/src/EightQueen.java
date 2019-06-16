@@ -115,8 +115,8 @@ public class EightQueen {
 	private static void printBasic() {
 
 		System.out.println("Total: " + trials + 
-				". Success: " + successCount +
-				". Failure: " + failureCount);
+				"\t Success: " + (successCount*100/trials) + "%" +
+				"\t Failure: " + (failureCount*100/trials) + "%");
 		
 		System.out.println("Average number of steps when success: " + totalSuccessSteps / trials);
 		System.out.println("Average number of steps when failure: " + totalFailureSteps / trials);
