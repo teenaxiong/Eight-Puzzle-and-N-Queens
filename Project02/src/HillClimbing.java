@@ -31,6 +31,8 @@ public class HillClimbing {
 	public boolean runAlgorithm() {
 		
 		int steps = sideWalk;
+		restartCount = 0;
+		stepCount = 0;
 		
 		curr.reset(); // generate random boards
 		curr.calculateHeuristicCost(); // calculate heuristic cost
@@ -133,5 +135,13 @@ public class HillClimbing {
 
 	public void setQueue(Queue<Node> queue) {
 		this.queue = queue;
+	}
+
+	public int getSideWalk() {
+		return sideWalk;
+	}
+
+	public void setSideWalk(int sideWalk) {
+		this.sideWalk = sideWalk;
 	}
 }

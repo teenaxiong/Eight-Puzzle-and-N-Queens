@@ -118,17 +118,17 @@ public class EightQueen {
 				"\t Success: " + (successCount*100/trials) + "%" +
 				"\t Failure: " + (failureCount*100/trials) + "%");
 		
-		System.out.println("Average number of steps when success: " + totalSuccessSteps / trials);
-		System.out.println("Average number of steps when failure: " + totalFailureSteps / trials);
+		System.out.println("Average number of steps when success: " + totalSuccessSteps / successCount);
+		System.out.println("Average number of steps when failure: " + totalFailureSteps / failureCount);
 	}
 	
 	private static void printRestart() {
 		System.out.println("Average number of random restart: " + restartCount / trials);
-		System.out.println("Average number of steps: " + totalSuccessSteps / trials);
+		System.out.println("Average number of steps: " + totalSuccessSteps / successCount);
 	}
 	
 	private static void initAlg(int sideWalk, boolean restart) {
-		hc.setStepCount(sideWalk);
+		hc.setSideWalk(sideWalk);
 		hc.setRandomRestart(restart);
 	}
 	
